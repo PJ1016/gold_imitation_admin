@@ -18,6 +18,7 @@ import {
 } from "../utils/constants";
 import { OptionDefinition } from "@cloudscape-design/components/internal/components/option/interfaces";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const AddJewelleryForm = () => {
   const [jewelleryName, setJewelleryName] = useState("");
@@ -30,6 +31,7 @@ const AddJewelleryForm = () => {
   const [discountedPrice, setDiscountedPrice] = useState<string>("");
   const [weight, setWeight] = useState<string>("");
   const [productImageUrl, setProductImageUrl] = useState<File[]>([]);
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     if (
       !productImageUrl ||
@@ -69,8 +71,7 @@ const AddJewelleryForm = () => {
           },
         }
       );
-      alert("File uploaded successfully!");
-      console.log(response.data);
+      navigate("/");
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Failed to upload file. Please try again.");
