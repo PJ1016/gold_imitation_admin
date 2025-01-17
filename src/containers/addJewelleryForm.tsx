@@ -161,7 +161,7 @@ const AddJewelleryForm = () => {
                 </FormField>
                 <FormField label="Material">
                   <Select
-                    selectedOption={jewelleryCategoryData}
+                    selectedOption={material}
                     onChange={({ detail }) =>
                       setMaterial(detail.selectedOption)
                     }

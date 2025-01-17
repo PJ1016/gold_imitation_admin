@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 interface JewelleryItem {
   name: string;
-  actualPrice: number;
+  price: number;
   discountedPrice: number;
   description: string;
   categoryId: number;
@@ -45,15 +45,15 @@ const COLUMN_DEFINITIONS = [
     isRowHeader: true,
   },
   {
-    id: "actualPrice",
+    id: "price",
     header: "Original Price",
-    cell: (item: JewelleryItem) => `₹${item.actualPrice?.toFixed(2)}`,
-    sortingField: "actualPrice",
+    cell: (item: JewelleryItem) => `₹${item.price}`,
+    sortingField: "price",
   },
   {
     id: "discountedPrice",
     header: "Discounted Price",
-    cell: (item: JewelleryItem) => `₹${item.discountedPrice?.toFixed(2)}`,
+    cell: (item: JewelleryItem) => `₹${item.discountedPrice}`,
     sortingField: "discountedPrice",
   },
   {
