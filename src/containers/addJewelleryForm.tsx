@@ -17,14 +17,65 @@ import {
   JEWELLERY_MATERIALS_LABEL,
 } from "../utils/constants";
 import { OptionDefinition } from "@cloudscape-design/components/internal/components/option/interfaces";
+import axios from "axios";
 
 const AddJewelleryForm = () => {
   const [jewelleryName, setJewelleryName] = useState("");
+  const [jewelleryDescription, setJewelleryDescription] = useState("");
   const [jewelleryCategoryData, setJewelleryCategoryData] =
     useState<OptionDefinition | null>(null);
-  const [jewelleryDescription, setJewelleryDescription] = useState("");
-  const [value, setValue] = useState<string>("");
+  const [material, setMaterial] = useState<OptionDefinition | null>(null);
+  const [stock, setStock] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [discountedPrice, setDiscountedPrice] = useState<string>("");
+  const [weight, setWeight] = useState<string>("");
   const [productImageUrl, setProductImageUrl] = useState<File[]>([]);
+  const handleSubmit = async () => {
+    if (
+      !productImageUrl ||
+      !jewelleryName ||
+      !jewelleryDescription ||
+      !material ||
+      !stock ||
+      !price ||
+      !discountedPrice ||
+      !weight ||
+      !jewelleryCategoryData
+    ) {
+      alert("Please fill in all fields and select a file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", jewelleryName);
+    formData.append("description", jewelleryDescription);
+    formData.append("category", jewelleryCategoryData?.value as string);
+    formData.append("material", material?.value as string);
+    formData.append("stock", stock);
+    formData.append("price", price);
+    formData.append("discountedPrice", discountedPrice);
+    formData.append("weight", weight);
+    formData.append("file", productImageUrl[0]);
+
+    console.log(formData);
+
+    try {
+      const response = await axios.post(
+        "https://gold-imitation-flask.onrender.com/uploadJewellery",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert("File uploaded successfully!");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("Failed to upload file. Please try again.");
+    }
+  };
   return (
     <ContentLayout>
       <Container>
@@ -35,7 +86,9 @@ const AddJewelleryForm = () => {
                 <Button formAction="none" variant="link">
                   Cancel
                 </Button>
-                <Button variant="primary">Submit</Button>
+                <Button variant="primary" onClick={handleSubmit}>
+                  Submit
+                </Button>
               </SpaceBetween>
             }
             header={<Header variant="h1">Add Jewellery </Header>}
@@ -83,24 +136,24 @@ const AddJewelleryForm = () => {
                 </FormField>
                 <FormField label="Total Stock">
                   <Input
-                    onChange={({ detail }) => setValue(detail.value)}
-                    value={value}
+                    onChange={({ detail }) => setStock(detail.value)}
+                    value={stock}
                     inputMode="numeric"
                     type="number"
                   />
                 </FormField>
                 <FormField label="Actual Price">
                   <Input
-                    onChange={({ detail }) => setValue(detail.value)}
-                    value={value}
+                    onChange={({ detail }) => setPrice(detail.value)}
+                    value={price}
                     inputMode="numeric"
                     type="number"
                   />
                 </FormField>
                 <FormField label="Discounted Price">
                   <Input
-                    onChange={({ detail }) => setValue(detail.value)}
-                    value={value}
+                    onChange={({ detail }) => setDiscountedPrice(detail.value)}
+                    value={discountedPrice}
                     inputMode="numeric"
                     type="number"
                   />
@@ -109,7 +162,7 @@ const AddJewelleryForm = () => {
                   <Select
                     selectedOption={jewelleryCategoryData}
                     onChange={({ detail }) =>
-                      setJewelleryCategoryData(detail.selectedOption)
+                      setMaterial(detail.selectedOption)
                     }
                     options={JEWELLERY_MATERIALS_LABEL}
                   />
@@ -117,8 +170,8 @@ const AddJewelleryForm = () => {
 
                 <FormField label="Weight">
                   <Input
-                    onChange={({ detail }) => setValue(detail.value)}
-                    value={value}
+                    onChange={({ detail }) => setWeight(detail.value)}
+                    value={weight}
                     inputMode="numeric"
                     type="number"
                   />
